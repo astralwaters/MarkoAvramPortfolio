@@ -11,7 +11,6 @@ namespace Shared.Models
         [MaxLength(128)]
         public string Title { get; set; }
 
-
         [Required]
         [MaxLength(256)]
         public string ThumbnailImagePath { get; set; }
