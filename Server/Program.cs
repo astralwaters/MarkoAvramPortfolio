@@ -21,7 +21,7 @@ builder.Services.AddCors(options => options.AddPolicy("CorsPolicy",
 
 builder.Services.AddRouting(options => options.LowercaseUrls=true);
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddNewtonsoftJson(options=>options.SerializerSettings.ReferenceLoopHandling= Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
 
 var app = builder.Build();
