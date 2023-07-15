@@ -62,9 +62,9 @@ namespace Server.Controllers
 					return BadRequest(ModelState);
 				}
 
-				Post postToCreate=_mapper.Map<Post>(postToCreateDTO);
+                Post postToCreate = _mapper.Map<Post>(postToCreateDTO);
 
-				if (postToCreateDTO.Published == true)
+                if (postToCreateDTO.Published == true)
 				{
                     //EU Date Time
                     postToCreate.PublishDate = DateTime.UtcNow.ToString("dd/MM/yyyy hh:mm");
@@ -112,25 +112,23 @@ namespace Server.Controllers
 					return BadRequest(ModelState);
 				}
 
-				Post updatedPost = _mapper.Map<Post>(updatedPostDTO);
+                Post updatedPost = _mapper.Map<Post>(updatedPostDTO);
 
-				if (updatedPost.Published == true)
-				{
-					if (oldPost.Published==false)
-					{
+                if (updatedPost.Published == true)
+                {
+                    if (oldPost.Published == false)
+                    {
                         updatedPost.PublishDate = DateTime.UtcNow.ToString("dd/MM/yyyy hh:mm");
                     }
-					else 
-					{
-						updatedPost.PublishDate = oldPost.PublishDate;
-					}
-
-                    
+                    else
+                    {
+                        updatedPost.PublishDate = oldPost.PublishDate;
+                    }
                 }
-				else 
+                else 
 				{
-					updatedPost.PublishDate = string.Empty;
-				}
+                    updatedPost.PublishDate = string.Empty;
+                }
 
 
 				//Detach oldPost from EF, else cant be updated

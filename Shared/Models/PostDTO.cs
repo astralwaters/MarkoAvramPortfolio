@@ -22,7 +22,7 @@ namespace Shared.Models
         [Required]
         [MaxLength(65536)]
         public string Content { get; set; }
-                
+
         [Required]
         public bool Published { get; set; }
 
@@ -32,6 +32,5 @@ namespace Shared.Models
 
         [Required]
         public int CategoryId { get; set; }
-        
     }
 }
