@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Server.Data;
 using Shared.Models;
@@ -11,14 +12,16 @@ namespace Server.Controllers
     {
         private readonly AppDBContext _appDBContext;
 		private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly IMapper _mapper;
 
-		//localhost:5001/api/posts
+        //localhost:5001/api/posts
 
-		public PostsController(AppDBContext appDBContext, IWebHostEnvironment webHostEnvironment)
+        public PostsController(AppDBContext appDBContext, IWebHostEnvironment webHostEnvironment, IMapper mapper)
         {
             _appDBContext = appDBContext;
 			_webHostEnvironment = webHostEnvironment;
-		}
+            _mapper = mapper;
+        }
 
 		#region CRUD operations
 
@@ -45,11 +48,11 @@ namespace Server.Controllers
 		
 
 		[HttpPost]
-		public async Task<IActionResult> Create([FromBody] Post postToCreate)
+		public async Task<IActionResult> Create([FromBody] PostDTO postToCreateDTO)
 		{
 			try
 			{
-				if(postToCreate == null)
+				if(postToCreateDTO == null)
 				{
 					return BadRequest(ModelState);
 				}
@@ -59,10 +62,12 @@ namespace Server.Controllers
 					return BadRequest(ModelState);
 				}
 
-				if (postToCreate.Published == true)
+				Post postToCreate=_mapper.Map<Post>(postToCreateDTO);
+
+				if (postToCreateDTO.Published == true)
 				{
-					//EU Date Time
-					postToCreate.PublishDate = DateTime.UtcNow.ToString("dd/MM/yyyy hh:mm");
+                    //EU Date Time
+                    postToCreate.PublishDate = DateTime.UtcNow.ToString("dd/MM/yyyy hh:mm");
 				}
 
 				await _appDBContext.Posts.AddAsync(postToCreate);
@@ -86,11 +91,11 @@ namespace Server.Controllers
 		}
 
 		[HttpPut("{id}")]
-		public async Task<IActionResult> Update(int id, [FromBody] Post updatedPost)
+		public async Task<IActionResult> Update(int id, [FromBody] PostDTO updatedPostDTO)
 		{
 			try
 			{
-				if (id<1 || updatedPost == null || id != updatedPost.PostId )
+				if (id<1 || updatedPostDTO == null || id != updatedPostDTO.PostId )
 				{
 					return BadRequest(ModelState);
 				}
@@ -107,10 +112,26 @@ namespace Server.Controllers
 					return BadRequest(ModelState);
 				}
 
-                if (oldPost.Published == false && updatedPost.Published == true)
+				Post updatedPost = _mapper.Map<Post>(updatedPostDTO);
+
+				if (updatedPost.Published == true)
 				{
-					updatedPost.PublishDate= DateTime.UtcNow.ToString("dd/MM/yyyy hh:mm");
+					if (oldPost.Published==false)
+					{
+                        updatedPost.PublishDate = DateTime.UtcNow.ToString("dd/MM/yyyy hh:mm");
+                    }
+					else 
+					{
+						updatedPost.PublishDate = oldPost.PublishDate;
+					}
+
+                    
                 }
+				else 
+				{
+					updatedPost.PublishDate = string.Empty;
+				}
+
 
 				//Detach oldPost from EF, else cant be updated
 				_appDBContext.Entry(oldPost).State = EntityState.Detached;
@@ -121,7 +142,7 @@ namespace Server.Controllers
 
 				if (changesPersistedToDatabase == false)
 				{
-					return StatusCode(500, "Something went wrong on our side. Please contact administrator. Error message: {e.Message}.");
+					return StatusCode(500, "Something went wrong on our side. Please contact administrator.");
 				}
 				else
 				{
