@@ -35,7 +35,7 @@ namespace Client.Services
             if (_gettingCategoriesFromDatabaseAndCaching == false)
             {
                 _gettingCategoriesFromDatabaseAndCaching = true;
-                _categories = await _httpClient.GetFromJsonAsync<List<Category>>(APIEndpoints.s_catergories);
+                _categories = await _httpClient.GetFromJsonAsync<List<Category>>(APIEndpoints.s_categories);
                 _gettingCategoriesFromDatabaseAndCaching = false;
             }
             

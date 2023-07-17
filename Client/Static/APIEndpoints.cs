@@ -8,6 +8,6 @@
         internal const string ServerBaseUrl = "https://markoavramserver.azurewebsites.net";
 #endif
 
-        internal readonly static  string s_catergories = $"{ServerBaseUrl}/api/categories";
+        internal readonly static  string s_categories = $"{ServerBaseUrl}/api/categories";
     }
 }
