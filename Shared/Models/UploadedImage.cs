@@ -1,9 +1,9 @@
 ﻿namespace Shared.Models
 {
-	public class UploadedImage
-	{
+    public class UploadedImage
+    {
         public string NewImageFileExtension { get; set; }
-        //base64  string represents binary
+        // Base64 is basically a string that represents binary
         public string NewImageBase64Content { get; set; }
         public string OldImagePath { get; set; }
     }
