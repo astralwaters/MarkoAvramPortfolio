@@ -68,17 +68,17 @@
 					@if (_updateSuccessful == true)
 					{
 						<Toast IsError="false" ToastTitle="Update successful"
-							   ToastBody="Your changes have been saved to the database."
-							   ParentMethodToCallOnClickBtnClose="() => _updateSuccessful = false" />
+							ToastBody="Your changes have been saved to the database."
+							ParentMethodToCallOnClickBtnClose="() => _updateSuccessful = false" />
 					}
 
 					@if (_attemptToUpdateFailed == true)
 					{
 						<Toast IsError="true" ToastTitle="Update failed"
-							   ToastBody="Update failed. Please try again and if the issue persists contact the administrator."
-							   ParentMethodToCallOnClickBtnClose="() => _attemptToUpdateFailed = false" />
+							ToastBody="Update failed. Please try again and if the issue persists contact the administrator."
+							ParentMethodToCallOnClickBtnClose="() => _attemptToUpdateFailed = false" />
 					}
-
+					
 				</div>
 
 			</div>
@@ -94,10 +94,10 @@
 	private Category _categoryToUpdate = null;
 	protected async override Task OnParametersSetAsync()
 	{
-		_categoryToUpdate = await InMemoryDatabaseCache.GetCategoryByCategoryId(CategoryId);
+		_categoryToUpdate = await InMemoryDatabaseCache.GetCategoryByCategoryId(CategoryId, false);
 	}
 
-	[Inject] HttpClient HttpClient { get; set; }
+	[Inject] HttpClient HttpClient { get; set; }	
 	private bool _attemptingToUpdate = false;
 	private bool _attemptToUpdateFailed = false;
 	private bool _updateSuccessful = false;
@@ -150,11 +150,11 @@
 			string byteString = Convert.ToBase64String(imageAsByteArray);
 
 			UploadedImage uploadedImage = new UploadedImage()
-				{
-					NewImageFileExtension = uploadedImageFile.Name.Substring(uploadedImageFile.Name.Length - 4),
-					NewImageBase64Content = byteString,
-					OldImagePath = string.Empty
-				};
+			{
+				NewImageFileExtension = uploadedImageFile.Name.Substring(uploadedImageFile.Name.Length - 4),
+				NewImageBase64Content = byteString,
+				OldImagePath = string.Empty
+			};
 
 			HttpResponseMessage response = await HttpClient.PostAsJsonAsync<UploadedImage>(APIEndpoints.s_imageUpload, uploadedImage);
 
