@@ -1,13 +1,16 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Server.Data;
 using Shared.Models;
+using System.Data;
 
 namespace Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Administrator")]
     public class PostsController : ControllerBase
     {
         private readonly AppDBContext _appDBContext;
@@ -26,7 +29,8 @@ namespace Server.Controllers
 		#region CRUD operations
 
 		[HttpGet]
-		public async Task<IActionResult> Get()
+        [AllowAnonymous]
+        public async Task<IActionResult> Get()
 		{
 			List<Post> posts = await _appDBContext.Posts
 				.Include(post=>post.Category)
@@ -36,7 +40,8 @@ namespace Server.Controllers
 		}
 
 		[HttpGet("dto/{id}")]
-		public async Task<IActionResult> GetDTO(int id)
+        [AllowAnonymous]
+        public async Task<IActionResult> GetDTO(int id)
 		{
 			Post post = await GetPostByPostId(id);
 			PostDTO postDTO = _mapper.Map<PostDTO>(post);
@@ -46,7 +51,8 @@ namespace Server.Controllers
 
 		////website.com/api/posts/withposts/id
 		[HttpGet("{id}")]
-		public async Task<IActionResult>Get(int id)
+        [AllowAnonymous]
+        public async Task<IActionResult>Get(int id)
 		{
 			Post post = await GetPostByPostId(id);
 			return Ok(post);
