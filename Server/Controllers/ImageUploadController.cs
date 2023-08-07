@@ -17,8 +17,8 @@ namespace Server.Controllers
         }
 
         [HttpPost]
-		public async Task<IActionResult> Post([FromBody] UploadedImage uploadedImage)
-		{
+        public async Task<IActionResult> Post([FromBody] UploadedImage uploadedImage)
+        {
             try
             {
                 if (ModelState.IsValid == false)
@@ -30,7 +30,7 @@ namespace Server.Controllers
                     if (uploadedImage.OldImagePath != "uploads/placeholder.jpg")
                     {
                         string oldUploadedImageFileName = uploadedImage.OldImagePath.Split('/').Last();
-                        System.IO.File.Delete($"{_webHostEnvironment.ContentRootPath}\\wwwroot\\uploads\\{oldUploadedImageFileName}");
+                        //System.IO.File.Delete($"{_webHostEnvironment.ContentRootPath}\\wwwroot\\uploads\\{oldUploadedImageFileName}");
                     }
                 }
 
